@@ -11,7 +11,8 @@ import {
   Globe, 
   Layers,
   ChevronRight,
-  Download
+  Download,
+  Star
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -45,6 +46,51 @@ const projects = [
     title: "Project title",
     subtitle: "UI, Art drection",
     image: "https://picsum.photos/seed/work6/800/600"
+  }
+];
+
+const testimonials = [
+  {
+    quote: "This is a template Figma file, turned into code using Anima. Learn more at AnimaApp.com",
+    author: "Gemma Nolen",
+    company: "Google",
+    image: "https://i.pravatar.cc/150?u=gemma1",
+    rating: 5
+  },
+  {
+    quote: "This is a template Figma file, turned into code using Anima. Learn more at AnimaApp.com",
+    author: "Gemma Nolen",
+    company: "Google",
+    image: "https://i.pravatar.cc/150?u=gemma2",
+    rating: 5
+  },
+  {
+    quote: "This is a template Figma file, turned into code using Anima. Learn more at AnimaApp.com",
+    author: "Gemma Nolen",
+    company: "Google",
+    image: "https://i.pravatar.cc/150?u=gemma3",
+    rating: 5
+  },
+  {
+    quote: "This is a template Figma file, turned into code using Anima. Learn more at AnimaApp.com",
+    author: "Gemma Nolen",
+    company: "Google",
+    image: "https://i.pravatar.cc/150?u=gemma4",
+    rating: 5
+  },
+  {
+    quote: "This is a template Figma file, turned into code using Anima. Learn more at AnimaApp.com",
+    author: "Gemma Nolen",
+    company: "Google",
+    image: "https://i.pravatar.cc/150?u=gemma5",
+    rating: 5
+  },
+  {
+    quote: "This is a template Figma file, turned into code using Anima. Learn more at AnimaApp.com",
+    author: "Gemma Nolen",
+    company: "Google",
+    image: "https://i.pravatar.cc/150?u=gemma6",
+    rating: 5
   }
 ];
 
@@ -256,6 +302,47 @@ export default function App() {
                 </div>
                 <h3 className="text-xl font-bold mb-1">{project.title}</h3>
                 <p className="text-zinc-500 text-sm">{project.subtitle}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonial Section */}
+      <section id="testimonials" className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className="text-4xl font-bold text-center mb-20 tracking-tight">Testimonial</h2>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="p-10 bg-zinc-50 rounded-lg flex flex-col justify-between"
+              >
+                <p className="text-zinc-900 font-semibold text-lg leading-relaxed mb-10">
+                  {testimonial.quote}
+                </p>
+                <div className="flex items-center gap-4">
+                  <img 
+                    src={testimonial.image} 
+                    alt={testimonial.author} 
+                    className="w-12 h-12 rounded-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div>
+                    <div className="flex gap-1 mb-1">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-zinc-900 text-zinc-900" />
+                      ))}
+                    </div>
+                    <h4 className="font-bold text-zinc-900">{testimonial.author}</h4>
+                    <p className="text-zinc-500 text-sm">{testimonial.company}</p>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
