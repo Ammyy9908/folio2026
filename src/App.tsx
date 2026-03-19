@@ -4,14 +4,6 @@ import {
   Linkedin, 
   Mail, 
   ExternalLink, 
-  Code2, 
-  Palette, 
-  Terminal, 
-  Cpu, 
-  Globe, 
-  Layers,
-  ChevronRight,
-  Download,
   Star
 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -94,24 +86,57 @@ const testimonials = [
   }
 ];
 
-const skills = [
-  { name: "Frontend", icon: <Globe className="w-5 h-5" />, items: ["React", "TypeScript", "Tailwind CSS", "Next.js"] },
-  { name: "Backend", icon: <Terminal className="w-5 h-5" />, items: ["Node.js", "Express", "PostgreSQL", "Firebase"] },
-  { name: "Design", icon: <Palette className="w-5 h-5" />, items: ["Figma", "UI/UX", "Motion Design", "Adobe CC"] },
-  { name: "Tools", icon: <Cpu className="w-5 h-5" />, items: ["Git", "Docker", "AWS", "Vercel"] }
-];
-
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+      
+      // Check if hovering over a link or button
+      const target = e.target as HTMLElement;
+      const isLink = target.closest('a') || target.closest('button');
+      setIsHovering(!!isLink);
+    };
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("mousemove", handleMouseMove);
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
   }, []);
 
   return (
-    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen bg-zinc-50 text-zinc-900 font-sans selection:bg-emerald-100 selection:text-emerald-900 lg:cursor-none">
+      {/* Custom Cursor */}
+      <motion.div
+        className="fixed top-0 left-0 w-8 h-8 pointer-events-none z-[9999] hidden lg:flex items-center justify-center rounded-full mix-blend-multiply"
+        animate={{
+          x: mousePos.x - 16,
+          y: mousePos.y - 16,
+          scale: isHovering ? 5 : 1,
+          backgroundColor: isHovering ? "rgba(254, 240, 138, 0.8)" : "transparent",
+          border: isHovering ? "0px solid transparent" : "2px solid #10b981",
+        }}
+        transition={{ 
+          type: "spring", 
+          damping: 25, 
+          stiffness: 300, 
+          mass: 0.5,
+          scale: { duration: 0.2 }
+        }}
+      >
+        <motion.div 
+          className="w-1 h-1 bg-emerald-500 rounded-full"
+          animate={{ opacity: isHovering ? 0 : 1 }}
+        />
+      </motion.div>
+      
       {/* Navigation */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? "bg-white/90 backdrop-blur-md border-b border-zinc-100 py-4" : "bg-transparent py-8"}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
@@ -123,10 +148,10 @@ export default function App() {
             Logo
           </motion.div>
           <div className="flex gap-10 text-[15px] font-medium text-zinc-600">
-            {["About", "Work", "Contact"].map((item) => (
+            {["Work", "Contact"].map((item) => (
               <a 
                 key={item} 
-                href={`#${item.toLowerCase() === 'work' ? 'projects' : item.toLowerCase()}`} 
+                href={`#${item.toLowerCase()}`} 
                 className="hover:text-zinc-900 transition-colors"
               >
                 {item}
@@ -349,154 +374,54 @@ export default function App() {
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="py-24 bg-white border-y border-zinc-100">
+      {/* Footer / Contact Section */}
+      <footer id="contact" className="py-32 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="aspect-square rounded-3xl overflow-hidden bg-zinc-100 relative group"
-            >
-              <img 
-                src="https://picsum.photos/seed/profile/800/800" 
-                alt="Profile" 
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 border-[12px] border-white/20 rounded-3xl" />
-            </motion.div>
+          <div className="grid lg:grid-cols-2 gap-20">
             <div>
-              <span className="text-emerald-600 font-bold tracking-widest text-xs uppercase mb-4 block">About Me</span>
-              <h2 className="text-4xl font-bold mb-6 tracking-tight">Passionate about bridging the gap between design and code.</h2>
-              <p className="text-zinc-600 text-lg leading-relaxed mb-6">
-                With over 4 years of experience in the digital space, I've helped startups and 
-                established companies build products that are not only beautiful but also 
-                highly functional.
+              <h2 className="text-4xl font-bold mb-8 tracking-tight text-zinc-900">Lets work together</h2>
+              <p className="text-zinc-600 text-lg leading-relaxed mb-12 max-w-lg">
+                This is a template Figma file, turned into code using Anima. Learn more at AnimaApp.com 
+                This is a template Figma file, turned into code using Anima. Learn more at AnimaApp.com
               </p>
-              <p className="text-zinc-600 text-lg leading-relaxed mb-8">
-                I believe that great software is built at the intersection of empathy, 
-                engineering, and aesthetics. My goal is to create tools that empower 
-                users and solve real-world problems.
-              </p>
-              <div className="flex gap-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-zinc-900">40+</div>
-                  <div className="text-sm text-zinc-500">Projects Done</div>
-                </div>
-                <div className="w-px h-12 bg-zinc-200" />
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-zinc-900">15+</div>
-                  <div className="text-sm text-zinc-500">Happy Clients</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Skills Section */}
-      <section id="skills" className="py-24 bg-zinc-900 text-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-20">
-            <span className="text-emerald-400 font-bold tracking-widest text-xs uppercase mb-4 block">Expertise</span>
-            <h2 className="text-4xl font-bold tracking-tight">My Tech Stack</h2>
-          </div>
-          
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {skills.map((skill, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="p-8 rounded-3xl bg-zinc-800/50 border border-zinc-700/50 hover:border-emerald-500/50 transition-colors"
-              >
-                <div className="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-400 mb-6">
-                  {skill.icon}
-                </div>
-                <h3 className="text-lg font-bold mb-4">{skill.name}</h3>
-                <ul className="space-y-2">
-                  {skill.items.map(item => (
-                    <li key={item} className="text-zinc-400 text-sm flex items-center gap-2">
-                      <div className="w-1 h-1 bg-emerald-500 rounded-full" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-24">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="bg-emerald-600 rounded-[3rem] p-12 lg:p-20 text-white relative overflow-hidden">
-            <div className="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mb-6">Let's work together on your next project.</h2>
-                <p className="text-emerald-100 text-lg mb-10">
-                  I'm currently available for freelance work and full-time positions. 
-                  Let's turn your idea into reality.
-                </p>
-                <div className="flex flex-col gap-4">
-                  <a href="mailto:hello@sandhya.dev" className="flex items-center gap-4 text-xl font-medium hover:text-emerald-200 transition-colors">
-                    <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center">
-                      <Mail className="w-6 h-6" />
-                    </div>
-                    hello@sandhya.dev
-                  </a>
-                  <div className="flex gap-4 mt-4">
-                    <a href="#" className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center hover:bg-white/20 transition-all">
-                      <Github className="w-6 h-6" />
-                    </a>
-                    <a href="#" className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center hover:bg-white/20 transition-all">
-                      <Linkedin className="w-6 h-6" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-white rounded-3xl p-8 text-zinc-900 shadow-2xl">
-                <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                  <div>
-                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2 block">Name</label>
-                    <input type="text" className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-200 focus:outline-none focus:border-emerald-500 transition-colors" placeholder="Your Name" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2 block">Email</label>
-                    <input type="email" className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-200 focus:outline-none focus:border-emerald-500 transition-colors" placeholder="your@email.com" />
-                  </div>
-                  <div>
-                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2 block">Message</label>
-                    <textarea rows={4} className="w-full px-4 py-3 rounded-xl bg-zinc-50 border border-zinc-200 focus:outline-none focus:border-emerald-500 transition-colors resize-none" placeholder="Tell me about your project..." />
-                  </div>
-                  <button className="w-full bg-emerald-600 text-white font-bold py-4 rounded-xl hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-100">
-                    Send Message
-                  </button>
-                </form>
+              <div className="flex gap-6 items-center">
+                <a href="#" className="hover:opacity-70 transition-opacity">
+                  <img src="https://cdn.simpleicons.org/discord/000000" alt="Discord" className="w-8 h-8" />
+                </a>
+                <a href="#" className="hover:opacity-70 transition-opacity">
+                  <img src="https://cdn.simpleicons.org/facebook/000000" alt="Facebook" className="w-8 h-8" />
+                </a>
+                <a href="#" className="hover:opacity-70 transition-opacity">
+                  <img src="https://cdn.simpleicons.org/dribbble/000000" alt="Dribbble" className="w-8 h-8" />
+                </a>
+                <a href="#" className="hover:opacity-70 transition-opacity">
+                  <img src="https://cdn.simpleicons.org/instagram/000000" alt="Instagram" className="w-8 h-8" />
+                </a>
+                <a href="#" className="hover:opacity-70 transition-opacity">
+                  <img src="https://cdn.simpleicons.org/behance/000000" alt="Behance" className="w-8 h-8" />
+                </a>
               </div>
             </div>
             
-            {/* Decorative circles */}
-            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-emerald-500 rounded-full blur-3xl opacity-50" />
-            <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-emerald-700 rounded-full blur-3xl opacity-50" />
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-12 border-t border-zinc-200">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-sm text-zinc-500">
-            © 2026 Sandhya. Built with React & Tailwind.
-          </div>
-          <div className="flex gap-8 text-sm font-medium text-zinc-600">
-            <a href="#" className="hover:text-emerald-600 transition-colors">Twitter</a>
-            <a href="#" className="hover:text-emerald-600 transition-colors">Dribbble</a>
-            <a href="#" className="hover:text-emerald-600 transition-colors">Instagram</a>
+            <div className="flex flex-col justify-start">
+              <form className="space-y-4 max-w-md lg:ml-auto w-full" onSubmit={(e) => e.preventDefault()}>
+                <input 
+                  type="text" 
+                  placeholder="Name" 
+                  className="w-full px-6 py-4 bg-zinc-100 border-none focus:ring-1 focus:ring-zinc-400 transition-all outline-none text-zinc-900 placeholder:text-zinc-500"
+                />
+                <input 
+                  type="email" 
+                  placeholder="Email" 
+                  className="w-full px-6 py-4 bg-zinc-100 border-none focus:ring-1 focus:ring-zinc-400 transition-all outline-none text-zinc-900 placeholder:text-zinc-500"
+                />
+                <div className="pt-4">
+                  <button className="px-16 py-5 bg-[#2D2D2D] text-white font-bold text-lg hover:bg-zinc-900 transition-all">
+                    Submit
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </footer>
